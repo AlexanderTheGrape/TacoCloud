@@ -64,6 +64,7 @@ public class DesignTacoController {
         log.info("Processing taco: {}", taco);
 
         return "redirect:/orders/current";
+        // TODO fix the error arising from this request
     }
 
     // TODO find out how this iterable/stream/filter/collect magic is useful
