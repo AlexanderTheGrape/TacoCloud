@@ -1,12 +1,13 @@
 package tacos.model;
 
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class IngredientByIdConverter {
+public class IngredientByIdConverter implements Converter<String, Ingredient> {
 
     private Map<String, Ingredient> ingredientMap = new HashMap<>();
 
