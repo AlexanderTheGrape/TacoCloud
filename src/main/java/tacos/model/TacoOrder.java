@@ -1,5 +1,6 @@
 package tacos.model;
 
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
@@ -29,12 +30,11 @@ public class TacoOrder {
     @CreditCardNumber(message="Not a valid credit card number - correct credit card number required")
     private String ccNumber;
 
-    @Pattern(regexp="^(0$")
+    @Pattern(regexp="^(0[1-9]|1[0-1])([\\/])([2-9][0-9])$", message="Invalid credit card expiration date")
     private String ccExpiration;
 
-    @NotBlank(message="is required")
+    @Digits(integer = 3, fraction = 0, message = "Invalid CVV")
     private String ccCVV;
-
 
     private List<Taco> tacos = new ArrayList<>();
 
