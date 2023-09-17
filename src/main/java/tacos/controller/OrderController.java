@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import tacos.data.OrderRepository;
 import tacos.model.TacoOrder;
-import tacos.data.IngredientRepository
 
 @Slf4j
 @Controller
