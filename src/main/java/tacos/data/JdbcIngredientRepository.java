@@ -19,29 +19,30 @@ public class JdbcIngredientRepository implements IngredientRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // Override not used here. TODO see if this causes any issues, when/when not to use override
+    @Override
     public Iterable<Ingredient> findAll() {
         return jdbcTemplate.query(
                 "select id, name, type from Ingredient",
                 this::mapRowToIngredient);
     }
 
+    @Override
     public Optional<Ingredient> findById(String id) {
         List<Ingredient> results = jdbcTemplate.query(
                 "select id, name, type from Ingredient where id=?",
-                this::mapRowToIngredient, // TODO when is it better to use method reference operators (::)?
-                                            // TODO I thought lambda is better for readability
-                id); // TODO see how we do db reads in macquarie projects
+                this::mapRowToIngredient,
+                id);
         return results.size() == 0 ? Optional.empty() : Optional.of(results.get(0));
     }
 
+    @Override
     public Ingredient save(Ingredient ingredient) {
         jdbcTemplate.update(
                 "insert into Ingredient (id, name, type) values (?, ?, ?)",
                 ingredient.getId(),
                 ingredient.getName(),
                 ingredient.getType().toString());
-        return ingredient; // TODO why would we bother returning anything? Why not have a void method and possible error?
+        return ingredient;
     }
 
     private Ingredient mapRowToIngredient(ResultSet row, int rowNum) throws SQLException {

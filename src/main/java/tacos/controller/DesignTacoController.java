@@ -14,6 +14,7 @@ import tacos.model.Taco;
 import tacos.model.TacoOrder;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,14 +31,20 @@ public class DesignTacoController {
     }
 
     @ModelAttribute
-    public void addIngredientsToModel(Model model) { // TODO why are we using an empty spring model and adding ModelAttributes to it
+    public void addIngredientsToModel(Model model) {
+        // TODO why are we using an empty spring model and adding ModelAttributes to it
+        // TODO why do we need the IngredientRef reference object to define linking between Taco and Ingredient? pg 71
+        // TODO What is the purpose of using a foreign key, pointing to primary key of another table?
+        // TODO Why does the company have cassandra dbs? Surely they aren't that big so as to require horizontal scaling?
+        // TODO Does a database sequence id generator use 64bit (Long or BigInt)? See Schema.sql line 2, also OrderRepository.java
 
         Iterable<Ingredient> ingredients = ingredientRepo.findAll();
         Type[] types = Ingredient.Type.values();
         for (Type type : types) {
             model.addAttribute(
                     type.toString().toLowerCase(),
-                    filterByType((List<Ingredient>) ingredients, type)); // TODO apparently I didn't need to cast to list. How not to?
+                    filterByType((Collection<Ingredient>) ingredients, type)
+            );
 
         }
     }
@@ -73,10 +80,7 @@ public class DesignTacoController {
         return "redirect:/orders/current";
     }
 
-    // TODO why are we not iterating through the ITERABLE ingredients iterable from above? why do we need to cast
-    // TODO ..the iterable to a list, then collect it back as an iterable?
-    // TODO if Interable can't .stream(), whats the point of using it at all? Why not List()?
-    private Iterable<Ingredient> filterByType(List<Ingredient> ingredients, Type type) {
+    private Iterable<Ingredient> filterByType(Collection<Ingredient> ingredients, Type type) {
         return ingredients
                 .stream()
                 .filter(x -> x.getType().equals(type))
