@@ -24,11 +24,11 @@ public class Taco {
     @Size(min=5, message="Name must be at least 5 characters long")
     private String name;
 
-    @NotNull
     @Size(min=1, message="You must choose at least 1 ingredient")
     @ManyToMany
     private List<Ingredient> ingredients = new ArrayList<>();
 
+    // TODO why is this addIngredient method unused, but the addTaco() in TacoOrder.java is used?
     public void addIngredient(Ingredient ingredient) {
         this.ingredients.add(ingredient);
     }

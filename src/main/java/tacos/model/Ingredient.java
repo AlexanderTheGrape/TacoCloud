@@ -9,14 +9,14 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor(access= AccessLevel.PRIVATE, force=true)
+@AllArgsConstructor //TODO why do I need an explicit RequiredArgsConstructor (page 87)? AllArgs does it. Also the fields are not final
+@NoArgsConstructor(access=AccessLevel.PRIVATE, force=true)
 public class Ingredient {
 
     @Id
-    private final String id;
-    private final String name;
-    private final Type type;
+    private String id;
+    private String name;
+    private Type type;
 
     public enum Type {
         WRAP,
