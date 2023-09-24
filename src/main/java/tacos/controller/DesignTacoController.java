@@ -37,6 +37,9 @@ public class DesignTacoController {
         // TODO What is the purpose of using a foreign key, pointing to primary key of another table?
         // TODO Why does the company have cassandra dbs? Surely they aren't that big so as to require horizontal scaling?
         // TODO Does a database sequence id generator use 64bit (Long or BigInt)? See Schema.sql line 2, also OrderRepository.java
+        // TODO Why do we not specify the hash function for a hashmap when creating the hashmap?
+        //  Is this made automatically?
+        // TODO How do we implement a synchronous hashmap? Hashtable implementation implements Dictionary, which is deprecated
 
         Iterable<Ingredient> ingredients = ingredientRepo.findAll();
         Type[] types = Ingredient.Type.values();
