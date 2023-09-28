@@ -12,5 +12,5 @@ spring:
         - casshost-2.tacocloud.com
         - casshost-3.tacocloud.com
       port: 9043
-      username:
-      password:
+      username: tacocloud
+      password: somepassword
