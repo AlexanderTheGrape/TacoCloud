@@ -8,9 +8,9 @@ spring:
       keyspace-name: tacocloud
       local-datacenter: datacenter1
       contact-points:
-        - casshost-1.tacocloud.com
-        - casshost-2.tacocloud.com
-        - casshost-3.tacocloud.com
+      - casshost-1.tacocloud.com
+      - casshost-2.tacocloud.com
+      - casshost-3.tacocloud.com
       port: 9043
       username: tacocloud
       password: somepassword

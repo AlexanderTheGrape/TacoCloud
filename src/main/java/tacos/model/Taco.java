@@ -35,6 +35,6 @@ public class Taco {
     private List<IngredientUDT> ingredients = new ArrayList<>();
 
     public void addIngredient(Ingredient ingredient) {
-        this.ingredients.add(TacoUDRUtils.toIngredientUDT(ingredient));
+        this.ingredients.add(new IngredientUDT(ingredient.getName(), ingredient.getType()));
     }
 }
