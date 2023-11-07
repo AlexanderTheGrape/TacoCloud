@@ -1,4 +1,7 @@
 steps:
+  - name: maven:3.3-jdk-17
+    entrypoint: mvn
+    args: [ '--version' ]
   - name: 'gcr.io/cloud-builders/docker'
     script: |
       docker build -t us-central1-docker.pkg.dev/$PROJECT_ID/quickstart-repo/quickstart-image:tag1 .
