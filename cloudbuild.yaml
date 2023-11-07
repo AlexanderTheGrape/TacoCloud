@@ -1,7 +1,9 @@
 steps:
-  - name: 'gcr.io/cloud-builders/docker'
-    script: |
-      docker build -t us-central1-docker.pkg.dev/$PROJECT_ID/quickstart-repo/quickstart-image:tag1 .
-    automapSubstitutions: true
+  name: 'gcr.io/cloud-builders/docker'
+  script: |
+    docker build -t us-central1-docker.pkg.dev/$PROJECT_ID/quickstart-repo/quickstart-image:tag1 .
+  automapSubstitutions: true
 images:
   - 'us-central1-docker.pkg.dev/valid-verbena-305920/quickstart-repo/quickstart-image:tag1'
+options:
+  logging: CLOUD_LOGGING_ONLY
