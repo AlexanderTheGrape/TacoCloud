@@ -1,9 +1,7 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
-    script: |
-      docker build -t taco_cloud_image .
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/valid-verbena-305920/first-artifact-registry/taco_cloud_image', '.']
     automapSubstitutions: true
-images:
-  - 'us-central1-docker.pkg.dev/valid-verbena-305920/first-artifact-registry/taco_cloud_image:latest'
+images: ['us-central1-docker.pkg.dev/valid-verbena-305920/first-artifact-registry/taco_cloud_image']
 options:
   logging: CLOUD_LOGGING_ONLY
