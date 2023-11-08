@@ -1,10 +1,7 @@
 steps:
-  - name: maven:3.9.5-eclipse-temurin-17
-    entrypoint: mvn
-    args: [ '--version' ]
   - name: 'gcr.io/cloud-builders/docker'
     script: |
-      docker build --build-arg JAR_FILE=target/*.jar -t myorg/myapp .
+      docker build -t taco_cloud_image .
     automapSubstitutions: true
 images:
   - 'us-central1-docker.pkg.dev/valid-verbena-305920/quickstart-repo/quickstart-image:tag1'
