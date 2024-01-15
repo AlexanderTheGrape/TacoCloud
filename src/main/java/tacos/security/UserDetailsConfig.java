@@ -6,8 +6,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import tacos.data.UserRepository;
+import tacos.model.User;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,5 +32,15 @@ public class UserDetailsConfig {
                 "buzz", encoder.encode("password"),
                 Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"))));
         return new InMemoryUserDetailsManager(usersList);
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService(UserRepository userRepo) {
+        return username -> {
+            tacos.model.User user = userRepo.findByUsername(username);
+            if (user != null) return user;
+
+            throw new UsernameNotFoundException("User '" + username + "' not found");
+        };
     }
 }
