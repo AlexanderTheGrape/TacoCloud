@@ -12,8 +12,7 @@ import tacos.model.RegistrationForm;
 @RequestMapping("/register")
 public class RegistrationController {
 
-    private UserRepository userRepo; // TODO get JPA repository again (assumed here)
-                                        // or specify JDBC
+    private UserRepository userRepo;
     private PasswordEncoder passwordEncoder;
 
     public RegistrationController(

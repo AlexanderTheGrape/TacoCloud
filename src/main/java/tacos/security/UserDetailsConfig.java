@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import tacos.data.UserRepository;
-import tacos.model.User;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +21,7 @@ public class UserDetailsConfig {
     //TODO In a MVC model or similar, where would a user details configuration belong?
     // Is it data, or security, or something else?
 
+    // In-memory UserDetailsService
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder encoder) {
         List<UserDetails> usersList = new ArrayList<>();
@@ -29,18 +29,19 @@ public class UserDetailsConfig {
                 "buzz", encoder.encode("password"),
                 Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"))));
         usersList.add(new User(
-                "buzz", encoder.encode("password"),
+                "woody", encoder.encode("password"),
                 Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"))));
         return new InMemoryUserDetailsManager(usersList);
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepo) {
-        return username -> {
-            tacos.model.User user = userRepo.findByUsername(username);
-            if (user != null) return user;
-
-            throw new UsernameNotFoundException("User '" + username + "' not found");
-        };
-    }
+    // Custom implementation UserDetailsService
+//    @Bean
+//    public UserDetailsService userDetailsService(UserRepository userRepo) {
+//        return username -> {
+//            tacos.model.User user = userRepo.findByUsername(username);
+//            if (user != null) return user;
+//
+//            throw new UsernameNotFoundException("User '" + username + "' not found");
+//        };
+//    }
 }

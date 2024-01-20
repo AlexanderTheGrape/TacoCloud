@@ -7,6 +7,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -20,18 +22,22 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-         http.authorizeRequests((authorizeRequests) ->
-                authorizeRequests
-                        .requestMatchers("/design", "/orders")
-                            .hasRole("USER")
-                        .requestMatchers("/", "/**").access("permitAll()")
-        )
-        .formLogin(form -> form
-                .loginPage("/login")
-                .permitAll()
-        );
-        return http.build();
+    MvcRequestMatcher.Builder mvc(HandlerMappingIntrospector introspector) {
+        return new MvcRequestMatcher.Builder(introspector);
     }
 
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
+         http.authorizeHttpRequests((authorizeRequests) ->
+                authorizeRequests
+                        .requestMatchers(mvc.pattern("/design"), mvc.pattern("/orders"))
+                            .hasRole("USER")
+                        .requestMatchers(mvc.pattern("/"), mvc.pattern("/**"))
+                            .permitAll())
+        .formLogin(form -> form
+                .loginPage("/login")
+                .permitAll());
+        return http.build();
+    }
+    // TODO get application working
 }

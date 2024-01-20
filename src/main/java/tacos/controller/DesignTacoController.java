@@ -1,8 +1,8 @@
 package tacos.controller;
 
 import jakarta.validation.Valid;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -13,9 +13,7 @@ import tacos.model.Ingredient.Type;
 import tacos.model.Taco;
 import tacos.model.TacoOrder;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -26,6 +24,7 @@ public class DesignTacoController {
 
     private final IngredientRepository ingredientRepo;
 
+    @Autowired
     public DesignTacoController(IngredientRepository ingredientRepo) {
         this.ingredientRepo = ingredientRepo;
     }
@@ -45,7 +44,6 @@ public class DesignTacoController {
                     type.toString().toLowerCase(),
                     filterByType((Collection<Ingredient>) ingredients, type)
             );
-
         }
     }
 

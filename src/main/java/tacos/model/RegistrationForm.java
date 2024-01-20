@@ -1,7 +1,6 @@
 package tacos.model;
 
 import lombok.Data;
-import tacos.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Data
