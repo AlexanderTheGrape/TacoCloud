@@ -2,3 +2,26 @@ spring:
   datasource:
     generate-unique-name: false
     name: tacocloud
+  security:
+    oauth2:
+      client:
+        registration:
+          my-oidc-client:
+            provider: my-oidc-provider
+            client-id: my-client-id
+            client-secret: my-client-secret
+            authorization-grant-type: authorization_code
+            scope: openid,profile
+        provider:
+          my-oidc-provider:
+            issuer-uri: https://my-oidc-provider.com
+#        registration:
+#          my-oauth2-client:
+#            provider: my-auth-server
+#            client-id: my-client-id
+#            client-secret: my-client-secret
+#            authorization-grant-type: authorization_code
+#            scope: message.read,message.write
+#        provider:
+#          my-auth-server:
+#            issuer-uri: https://my-auth-server.com

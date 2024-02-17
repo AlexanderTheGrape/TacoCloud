@@ -2,6 +2,7 @@ package tacos.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -36,8 +37,13 @@ public class SecurityConfig {
                             .permitAll())
         .formLogin(form -> form
                 .loginPage("/login")
-                .permitAll());
+                .defaultSuccessUrl("/design", false))
+                .oauth2Login(Customizer.withDefaults())
+                .logout(Customizer.withDefaults());
+         // TODO to continue with API registration (to use OAuth from google), I need to register my app. I need a domain/application home page. So,
+        // TODO register domain name first (buy a domain address) first, and deploy app there.
+//                 .oauth2Client(Customizer.withDefaults()); // TODO find out why I cant have both in the application.yml
+        // TODO find out why the user is sent away (403) when trying to submit their taco order.
         return http.build();
     }
-    // TODO get application working
 }
