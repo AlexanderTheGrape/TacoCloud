@@ -14,7 +14,7 @@ spring:
             scope: openid,profile
         provider:
           my-oidc-provider:
-            issuer-uri: https://my-oidc-provider.com
+            issuer-uri: https://accounts.google.com/o/oauth2/v2/auth
 #        registration:
 #          my-oauth2-client:
 #            provider: my-auth-server
