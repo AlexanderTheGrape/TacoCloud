@@ -128,6 +128,40 @@ public class RequestDataFileClient {
         }
     }
 
+    public void writeLittleObjectToFile(RequestClientInfo requestClientInfo) { // TODO make generic
+        try {
+            if (Files.isWritable(requestDataDirPath)) {
+                try(FileOutputStream fos = new FileOutputStream(requestObjectDataFilePath.toFile(), false);
+                    ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+                    oos.writeObject(requestClientInfo);
+                }
+            } else {
+                log.error("File not writable");
+            }
+        } catch (IOException e) {
+            log.error("Failed to write to file", e);
+        }
+    }
+
+    public RequestClientInfo readLittleObjectFromFile() { // TODO make generic, use wildcards/super if possible
+        RequestClientInfo data = null;
+        try {
+            if (Files.isReadable(requestObjectDataFilePath)) {
+                try (FileInputStream fis = new FileInputStream(requestObjectDataFilePath.toFile());
+                     ObjectInputStream ois = new ObjectInputStream(fis)) {
+                    data = (RequestClientInfo) ois.readObject();
+                } catch (ClassNotFoundException e) {
+                    log.error("Class not found for object deserialization", e);
+                }
+            } else {
+                log.error("File not readable");
+            }
+        } catch (IOException e) {
+            log.error("Failed to read objects from file", e);
+        }
+        return data;
+    }
+
     public ClientRequestsData readObjectFromFile() { // TODO make generic, use wildcards/super if possible
         ClientRequestsData data = null;
         try {

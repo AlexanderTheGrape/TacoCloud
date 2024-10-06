@@ -33,13 +33,16 @@ public class RequestAnalyzerService {
                 ZonedDateTime.now().toString());
 
 //        requestDataFileClient.writeLineToFile(lineToSave);
-        requestDataFileClient.writeObjectToFile(new RequestClientInfo(request.getRemoteAddr(), request.getRemotePort(),
-                ZonedDateTime.now()));
+//        requestDataFileClient.writeObjectToFile(new RequestClientInfo(request.getRemoteAddr(), request.getRemotePort(),
+//                ZonedDateTime.now()));
 //        List<RequestClientInfo> clientInfoList = requestDataFileClient.readObjectsFromFile(); // TODO Fix
 //        if (clientInfoList != null) {
 //            for(RequestClientInfo info : clientInfoList) {
 //                System.out.println(info);
 //            }
 //        }
+        requestDataFileClient.writeLittleObjectToFile(new RequestClientInfo(request.getRemoteAddr(), request.getRemotePort(),
+                ZonedDateTime.now()));
+        log.info(requestDataFileClient.readLittleObjectFromFile().toString());
     }
 }
