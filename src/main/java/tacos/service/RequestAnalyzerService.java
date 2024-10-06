@@ -32,9 +32,9 @@ public class RequestAnalyzerService {
                 String.valueOf(request.getRemotePort()),
                 ZonedDateTime.now().toString());
 
-        requestDataFileClient.writeLineToFile(lineToSave);
-//        requestDataFileClient.writeObjectToFile(new RequestClientInfo(request.getRemoteAddr(), request.getRemotePort(),
-//                ZonedDateTime.now()));
+//        requestDataFileClient.writeLineToFile(lineToSave);
+        requestDataFileClient.writeObjectToFile(new RequestClientInfo(request.getRemoteAddr(), request.getRemotePort(),
+                ZonedDateTime.now()));
 //        List<RequestClientInfo> clientInfoList = requestDataFileClient.readObjectsFromFile(); // TODO Fix
 //        if (clientInfoList != null) {
 //            for(RequestClientInfo info : clientInfoList) {

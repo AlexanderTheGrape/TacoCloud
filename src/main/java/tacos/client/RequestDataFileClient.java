@@ -2,6 +2,7 @@ package tacos.client;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import tacos.model.ClientRequestsData;
 import tacos.model.RequestClientInfo;
 
 import java.io.*;
@@ -14,13 +15,13 @@ import java.util.List;
 @Slf4j
 @Service
 public class RequestDataFileClient {
-    private static String clientRequestDataDir = "Tacocloud/Data/ClientRequest";
+    private final static String clientRequestDataDir = "Tacocloud/Data/ClientRequest";
+    private final static String requestObjectDataFile = "ClientRequestObjectData.txt";
+    private final static String requestDataFile = "ClientRequestData.ser";
     private FileSystem fileSystem;
     private Path requestDataDirPath;
     private Path requestDataFilePath;
     private Path requestObjectDataFilePath;
-//    private FileOutputStream fos;
-//    private ObjectOutputStream oos;
 
     public RequestDataFileClient() {
         fileSystem = java.nio.file.FileSystems.getDefault();
@@ -52,8 +53,8 @@ public class RequestDataFileClient {
 
     private void initClientRequestDataFiles() {
         // check if file exists. if not, create new
-        requestDataFilePath = requestDataDirPath.resolve("ClientRequestData.txt");
-        requestObjectDataFilePath = requestDataDirPath.resolve("ClientRequestObjectData.txt");
+        requestDataFilePath = requestDataDirPath.resolve(requestDataFile);
+        requestObjectDataFilePath = requestDataDirPath.resolve(requestObjectDataFile);
         if (Files.exists(requestDataFilePath)) {
             if (!Files.isRegularFile(requestDataFilePath)) {
                 try {
@@ -99,26 +100,25 @@ public class RequestDataFileClient {
             if (Files.isWritable(requestDataDirPath)) {
                 try(FileOutputStream fos = new FileOutputStream(requestObjectDataFilePath.toFile(), false);
                         ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-                    ArrayList<RequestClientInfo> clientInfoList = readObjectsFromFile();
-                    System.out.println("list size after deserialisation: " + clientInfoList.size());
-//                    log.info("\nClientInfoList after readObjectsFromFile:" + clientInfoList);
-//                    System.out.println(clientInfoList);
-                    if (!clientInfoList.isEmpty()) {
-//                        log.info("\nClientInfoList was not empty. Before adding, its contents are:");
-//                        System.out.println(clientInfoList);
+                    ClientRequestsData data = readObjectFromFile();
+                    if (data != null && !data.getRequestClientInfoList().isEmpty()) {
+                        ArrayList<RequestClientInfo> clientInfoList = data.getRequestClientInfoList();
                         clientInfoList.add(new RequestClientInfo(
-                                    requestClientInfo.getRemoteIP(),
-                                    requestClientInfo.getRemotePort(),
-                                    requestClientInfo.getCurrentZonedDateTime()));
-//                        log.info("\nAfter adding its contents now are:");
-//                        System.out.println(clientInfoList);
+                                requestClientInfo.getRemoteIP(),
+                                requestClientInfo.getRemotePort(),
+                                requestClientInfo.getCurrentZonedDateTime()));
+                        data.setRequestClientInfoList(clientInfoList);
                     } else {
-                        log.info("\nclientInfoList was empty. Creating a new list.");
-                        clientInfoList = new ArrayList<>();
-                        clientInfoList.add(requestClientInfo);
+                        log.info("Client info list was empty. Creating a new object.");
+                        ArrayList<RequestClientInfo> clientInfoList = new ArrayList<>();
+                        clientInfoList.add(new RequestClientInfo(
+                                requestClientInfo.getRemoteIP(),
+                                requestClientInfo.getRemotePort(),
+                                requestClientInfo.getCurrentZonedDateTime()));
+                        data = new ClientRequestsData(clientInfoList);
                     }
-                    log.info("calling oos.writeObject(x)");
-                    oos.writeObject(clientInfoList);
+                    log.info("Data object after reading and updating: {}", data);
+                    oos.writeObject(data);
                 }
             } else {
                 log.error("File not writable");
@@ -128,39 +128,23 @@ public class RequestDataFileClient {
         }
     }
 
-    public ArrayList<RequestClientInfo> readObjectsFromFile() { // TODO make generic, use wildcards/super? etc if possible
+    public ClientRequestsData readObjectFromFile() { // TODO make generic, use wildcards/super if possible
+        ClientRequestsData data = null;
         try {
             if (Files.isReadable(requestObjectDataFilePath)) {
-                ArrayList<RequestClientInfo> clientInfoList = new ArrayList<>();
                 try (FileInputStream fis = new FileInputStream(requestObjectDataFilePath.toFile());
                         ObjectInputStream ois = new ObjectInputStream(fis)) {
-
-                    while (true) {
-                        ArrayList<RequestClientInfo> readObject = (ArrayList) ois.readObject();
-//                        System.out.println("The read object is:");
-//                        System.out.println(clientInfoList);
-                        if (readObject == null) {
-                            log.info("Read object evaluated as null");
-                            break;
-                        }
-                        log.info("Object read from file. Its contents are: {}", readObject);
-                        clientInfoList = readObject;
-                    }
-                } catch (EOFException e) {
-                    // Do nothing, end of file reached
+                    data = (ClientRequestsData) ois.readObject();
                 } catch (ClassNotFoundException e) {
                     log.error("Class not found for object deserialization", e);
                 }
-                log.info("XXXXXX Right before returning the read clientInfoList, it is: {}", clientInfoList);
-                return clientInfoList;
             } else {
                 log.error("File not readable");
-                return null;
             }
         } catch (IOException e) {
             log.error("Failed to read objects from file", e);
-            return null;
         }
+        return data;
     }
 
 }
