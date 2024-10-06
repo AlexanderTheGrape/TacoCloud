@@ -1,5 +1,8 @@
 package tacos.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import tacos.model.ClientRequestsData;
@@ -18,13 +21,18 @@ public class RequestDataFileClient {
     private final static String clientRequestDataDir = "Tacocloud/Data/ClientRequest";
     private final static String requestObjectDataFile = "ClientRequestObjectData.txt";
     private final static String requestDataFile = "ClientRequestData.ser";
+    private final static String clientDataJsonFile = "ClientRequestData.json";
     private FileSystem fileSystem;
     private Path requestDataDirPath;
     private Path requestDataFilePath;
     private Path requestObjectDataFilePath;
+    private Path requestJsonDataFilePath;
+    private ObjectMapper objectMapper;
 
     public RequestDataFileClient() {
         fileSystem = java.nio.file.FileSystems.getDefault();
+        objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
         initClientRequestDataDir();
         initClientRequestDataFiles();
 //        initClientRequestFileOutputStreams();
@@ -55,31 +63,26 @@ public class RequestDataFileClient {
         // check if file exists. if not, create new
         requestDataFilePath = requestDataDirPath.resolve(requestDataFile);
         requestObjectDataFilePath = requestDataDirPath.resolve(requestObjectDataFile);
-        if (Files.exists(requestDataFilePath)) {
-            if (!Files.isRegularFile(requestDataFilePath)) {
-                try {
-                    Files.delete(requestDataFilePath);
-                } catch (IOException e) {
-                    log.error("Could not delete non-regular file", e);
-                }
+        requestJsonDataFilePath = requestDataDirPath.resolve(clientDataJsonFile);
+//        if (!Files.exists(requestDataFilePath)) {
+//            try {
+//                Files.delete(requestDataFilePath);
+//                Files.createFile(requestDataFilePath);
+//            } catch (IOException e) {
+//                log.error("Could not delete non-regular file", e);
+//            }
+//        }
+        if (!Files.exists(requestJsonDataFilePath)) {
+            try {
+                Files.createFile(requestJsonDataFilePath);
+                log.info("json file created");
+            } catch (IOException e) {
+                log.error("Could not delete non-regular file", e);
             }
         } else {
-            try {
-                Files.createFile(requestDataFilePath);
-            } catch(IOException e) {
-                log.error("Could not create file", e);
-            }
+            log.info("json file exists. It is located at: {}", requestJsonDataFilePath.toAbsolutePath());
         }
     }
-
-//    private void initClientRequestFileOutputStreams() {
-//        try {
-//            fos = new FileOutputStream(requestObjectDataFilePath.toFile(), true);
-//            oos = new ObjectOutputStream(fos);
-//        } catch(Exception e) {
-//            log.error("Could not create file output stream", e);
-//        }
-//    }
 
     public void writeLineToFile(String s) {
         try {
@@ -179,6 +182,14 @@ public class RequestDataFileClient {
             log.error("Failed to read objects from file", e);
         }
         return data;
+    }
+
+    public void writeObjectToJsonFile(RequestClientInfo data) {
+        try {
+            objectMapper.writeValue(requestJsonDataFilePath.toFile(), data);
+        } catch (IOException e) {
+            log.error("IOException when writing object to json file", e);
+        }
     }
 
 }
