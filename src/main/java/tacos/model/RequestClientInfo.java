@@ -1,16 +1,18 @@
 package tacos.model;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.*;
+import lombok.extern.jackson.Jacksonized;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
+@Data
 @AllArgsConstructor
-@Getter
-@EqualsAndHashCode
+@NoArgsConstructor
 public class RequestClientInfo implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1;
     private String remoteIP;
     private int remotePort;
     private ZonedDateTime currentZonedDateTime;
