@@ -95,25 +95,31 @@ public class RequestDataFileClient {
     }
 
     public void writeObjectToFile(RequestClientInfo requestClientInfo) { // TODO make generic
+        ArrayList<RequestClientInfo> clientInfoList = null;
         try {
             if (Files.isWritable(requestDataDirPath)) {
                 try(FileOutputStream fos = new FileOutputStream(requestObjectDataFilePath.toFile(), false);
                         ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-                    ArrayList<RequestClientInfo> clientInfoList = readObjectsFromFile();
-                    System.out.println("list size after deserialisation: " + clientInfoList.size());
+                    clientInfoList = readObjectsFromFile();
+
 //                    log.info("\nClientInfoList after readObjectsFromFile:" + clientInfoList);
 //                    System.out.println(clientInfoList);
-                    if (!clientInfoList.isEmpty()) {
+                    if (clientInfoList != null && !clientInfoList.isEmpty()) {
+                        log.info("list size after deserialisation: {}", clientInfoList.size());
 //                        log.info("\nClientInfoList was not empty. Before adding, its contents are:");
 //                        System.out.println(clientInfoList);
                         clientInfoList.add(new RequestClientInfo(
-                                    requestClientInfo.getRemoteIP(),
-                                    requestClientInfo.getRemotePort(),
-                                    requestClientInfo.getCurrentZonedDateTime()));
+//                                    requestClientInfo.getRemoteIP(),
+//                                    requestClientInfo.getRemotePort(),
+//                                    requestClientInfo.getCurrentZonedDateTime()));
+
+                                        requestClientInfo.remoteIP,
+                                    requestClientInfo.remotePort,
+                                    requestClientInfo.currentZonedDateTime));
 //                        log.info("\nAfter adding its contents now are:");
 //                        System.out.println(clientInfoList);
                     } else {
-                        log.info("\nclientInfoList was empty. Creating a new list.");
+                        log.info("-- X -- ClientInfoList was empty. Creating a new list.");
                         clientInfoList = new ArrayList<>();
                         clientInfoList.add(requestClientInfo);
                     }
@@ -129,38 +135,35 @@ public class RequestDataFileClient {
     }
 
     public ArrayList<RequestClientInfo> readObjectsFromFile() { // TODO make generic, use wildcards/super? etc if possible
+        ArrayList<RequestClientInfo> clientInfoList = null;
         try {
             if (Files.isReadable(requestObjectDataFilePath)) {
-                ArrayList<RequestClientInfo> clientInfoList = new ArrayList<>();
                 try (FileInputStream fis = new FileInputStream(requestObjectDataFilePath.toFile());
                         ObjectInputStream ois = new ObjectInputStream(fis)) {
-
-                    while (true) {
-                        ArrayList<RequestClientInfo> readObject = (ArrayList) ois.readObject();
+                        while(ois.available() > 0)
+                            clientInfoList = (ArrayList<RequestClientInfo>) ois.readObject();
 //                        System.out.println("The read object is:");
 //                        System.out.println(clientInfoList);
-                        if (readObject == null) {
-                            log.info("Read object evaluated as null");
-                            break;
-                        }
-                        log.info("Object read from file. Its contents are: {}", readObject);
-                        clientInfoList = readObject;
-                    }
+//                        if (readObject == null) {
+//                            log.info("Read object evaluated as null");
+//                            break;
+//                        }
+                        log.info(" ----> Object read from file. Its contents are: {}", clientInfoList);
+//                    }
                 } catch (EOFException e) {
                     // Do nothing, end of file reached
+                    log.info("End of file reached");
                 } catch (ClassNotFoundException e) {
                     log.error("Class not found for object deserialization", e);
                 }
-                log.info("XXXXXX Right before returning the read clientInfoList, it is: {}", clientInfoList);
-                return clientInfoList;
             } else {
                 log.error("File not readable");
-                return null;
             }
         } catch (IOException e) {
             log.error("Failed to read objects from file", e);
-            return null;
         }
+        log.info("Right before returning the read clientInfoList in readObjectsFromFile(), it is: {}", clientInfoList);
+        return clientInfoList;
     }
 
 }

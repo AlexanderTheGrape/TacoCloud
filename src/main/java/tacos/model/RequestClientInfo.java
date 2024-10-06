@@ -7,15 +7,21 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+//@Data
+//@AllArgsConstructor
+//@NoArgsConstructor
 public class RequestClientInfo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1;
-    private String remoteIP;
-    private int remotePort;
-    private ZonedDateTime currentZonedDateTime;
+    public String remoteIP;
+    public int remotePort;
+    public ZonedDateTime currentZonedDateTime;
+
+    public RequestClientInfo(String remoteIP, int remotePort, ZonedDateTime zonedDateTime) {
+        this.remoteIP = remoteIP;
+        this.remotePort = remotePort;
+        this.currentZonedDateTime = zonedDateTime;
+    }
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
