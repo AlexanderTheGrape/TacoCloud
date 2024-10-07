@@ -51,7 +51,7 @@ public class RequestAnalyzerService {
 //        requestDataFileClient.writeLittleObjectToFile(new RequestClientInfo(request.getRemoteAddr(), request.getRemotePort(),
 //                ZonedDateTime.now()));
 //        log.info(requestDataFileClient.readLittleObjectFromFile().toString());
-        requestDataFileClient.writeObjectToJsonFile(requestClientInfo);
+        requestDataFileClient.updateClientRequestsData(requestClientInfo);
 
     }
 }

@@ -184,12 +184,37 @@ public class RequestDataFileClient {
         return data;
     }
 
-    public void writeObjectToJsonFile(RequestClientInfo data) {
+    public <T> void writeObjectToJsonFile(T data, Path filePath) {
         try {
-            objectMapper.writeValue(requestJsonDataFilePath.toFile(), data);
+            objectMapper.writeValue(filePath.toFile(), data);
         } catch (IOException e) {
             log.error("IOException when writing object to json file", e);
         }
     }
+
+    public <T> T readObjectFromJsonFile(Class<T> type, Path filePath) {
+        T obj = null;
+        try {
+            obj = objectMapper.readValue(filePath.toFile(), type);
+        } catch (IOException e) {
+            log.error("IOException when writing object to json file", e);
+        }
+        return obj;
+    }
+
+    public void updateClientRequestsData(RequestClientInfo singleRequestInfo) {
+        ClientRequestsData data = readObjectFromJsonFile(ClientRequestsData.class, requestJsonDataFilePath);
+        if (data == null) {
+            ArrayList<RequestClientInfo> requestsList = new ArrayList<>();
+            data = new ClientRequestsData(requestsList);
+        }
+
+        ArrayList<RequestClientInfo> requestsList = data.getRequestClientInfoList();
+        requestsList.add(singleRequestInfo);
+        data.setRequestClientInfoList(requestsList);
+
+        writeObjectToJsonFile(data, requestJsonDataFilePath);
+    }
+
 
 }
