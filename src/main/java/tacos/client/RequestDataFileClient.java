@@ -148,4 +148,8 @@ public class RequestDataFileClient extends AbstractFileClient{
 
         writeObjectToJsonFile(data, requestJsonDataFilePath);
     }
+
+    public ClientRequestsData getClientRequestsData() {
+        return readObjectFromJsonFile(ClientRequestsData.class, requestJsonDataFilePath);
+    }
 }

@@ -27,8 +27,7 @@ private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(De
 @Controller
 @RequestMapping("/design")
 /*
-The @SessionAttributes annotation indicates that the TacoOrder object that is put into the model a little later in the
-class should be maintained in session.
+The @SessionAttributes annotation indicates that the TacoOrder object that is put into the model and should be maintained in session.
  */
 @SessionAttributes("tacoOrder")
 public class DesignTacoController {
