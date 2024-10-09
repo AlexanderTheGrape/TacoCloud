@@ -83,17 +83,15 @@ public class DesignTacoController {
     }
 
     @PostMapping
-    public String processTaco(
-            @Valid Taco taco,
-            Errors errors,
-            @ModelAttribute TacoOrder tacoOrder) {
+    public String processTaco(@Valid Taco taco, Errors errors, @ModelAttribute TacoOrder tacoOrder) {
 
         if (errors.hasErrors()) {
+            log.error("Error in taco form submission: " + errors.getAllErrors());
             return "design";
         }
 
-        tacoOrder.addTaco(taco);
         log.info("Processing taco: {}", taco);
+        tacoOrder.addTaco(taco);
 
         return "redirect:/orders/current";
     }

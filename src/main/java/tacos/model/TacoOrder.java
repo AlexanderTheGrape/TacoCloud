@@ -41,10 +41,10 @@ public class TacoOrder  { // implements Serializable
     @CreditCardNumber(message="Not a valid credit card number - correct credit card number required")
     private String ccNumber;
 
-    @Pattern(regexp="^(0[1-9]|1[0-1])([\\/])([2-9][0-9])$", message="Invalid credit card expiration date")
+    @Pattern(regexp="^(0[1-9]|1[0-1])([\\/])([2-9][0-9])$", message="Invalid credit card expiration date. Format: MM/YY")
     private String ccExpiration;
 
-    @Digits(integer = 3, fraction = 0, message = "Invalid CVV")
+    @Digits(integer = 3, fraction = 0, message = "Invalid CVV. Please enter a 3 digit number")
     private String ccCVV;
 
     @OneToMany(cascade = CascadeType.ALL)
