@@ -18,9 +18,17 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/*
+This modest annotation (@Slf4j)
+has the same effect as if you were to explicitly add the following lines within the class:
+private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DesignTacoController.class);
+ */
 @Slf4j
 @Controller
 @RequestMapping("/design")
+/*
+The @SessionAttributes annotation indicates that the TacoOrder object that is put into the model and should be maintained in session.
+ */
 @SessionAttributes("tacoOrder")
 public class DesignTacoController {
 
@@ -32,20 +40,25 @@ public class DesignTacoController {
 
     @ModelAttribute
     public void addIngredientsToModel(Model model) {
-        // TODO why are we using an empty spring model and adding ModelAttributes to it
-        // TODO why do we need the IngredientRef reference object to define linking between Taco and Ingredient? pg 71
-        // TODO What is the purpose of using a foreign key, pointing to primary key of another table?
-        // TODO Why does the company have cassandra dbs? Surely they aren't that big so as to require horizontal scaling?
-        // TODO Does a database sequence id generator use 64bit (Long or BigInt)? See Schema.sql line 2, also OrderRepository.java
+        List<Ingredient> ingredients = Arrays.asList(
+                new Ingredient("FLTO", "Flour Tortilla", Type.WRAP),
+                new Ingredient("COTO", "Corn Tortilla", Type.WRAP),
+                new Ingredient("GRBF", "Ground Beef", Type.PROTEIN),
+                new Ingredient("CARN", "Carnitas", Type.PROTEIN),
+                new Ingredient("TMTO", "Diced Tomatoes", Type.VEGGIES),
+                new Ingredient("LETC", "Lettuce", Type.VEGGIES),
+                new Ingredient("CHED", "Cheddar", Type.CHEESE),
+                new Ingredient("JACK", "Monterrey Jack", Type.CHEESE),
+                new Ingredient("SLSA", "Salsa", Type.SAUCE),
+                new Ingredient("SRCR", "Sour Cream", Type.SAUCE)
+        );
+        //        Iterable<Ingredient> ingredients = ingredientRepo.findAll(); // For repo implementation
 
-        Iterable<Ingredient> ingredients = ingredientRepo.findAll();
         Type[] types = Ingredient.Type.values();
         for (Type type : types) {
-            model.addAttribute(
-                    type.toString().toLowerCase(),
+            model.addAttribute(type.toString().toLowerCase(),
                     filterByType((Collection<Ingredient>) ingredients, type)
             );
-
         }
     }
 
@@ -59,23 +72,26 @@ public class DesignTacoController {
         return new Taco();
     }
 
+    /*
+    "...showDesignForm also populates the given Model with an empty Taco object under a key
+    whose name is "design". This will enable the form to have a blank slate on which to
+    create a taco masterpiece."
+     */
     @GetMapping
     public String showDesignForm() {
         return "design";
     }
 
     @PostMapping
-    public String processTaco(
-            @Valid Taco taco,
-            Errors errors,
-            @ModelAttribute TacoOrder tacoOrder) {
+    public String processTaco(@Valid Taco taco, Errors errors, @ModelAttribute TacoOrder tacoOrder) {
 
         if (errors.hasErrors()) {
+            log.error("Error in taco form submission: " + errors.getAllErrors());
             return "design";
         }
 
-        tacoOrder.addTaco(taco);
         log.info("Processing taco: {}", taco);
+        tacoOrder.addTaco(taco);
 
         return "redirect:/orders/current";
     }
