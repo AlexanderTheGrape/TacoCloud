@@ -8,11 +8,8 @@
     </head>
 
     <body>
-        <div th:if="${param.tacoOrderId != null}" class="orderSuccessful">
-            <span th:text="'Taco order successful. Order ID: ' + ${param.tacoOrderId}">orderSuccess</span>
-        </div>
         <div th:if="${tacoOrderId != null}" class="orderSuccessful">
-            <span th:text="'Taco order successful2. Order ID: ' + ${tacoOrderId}">orderSuccess</span>
+            <span th:text="'Order successful. Order ID: ' + ${tacoOrderId}">orderSuccess</span>
         </div>
 <!--        <div th:unless="${param.tacoOrderId != null}">-->
 <!--            <p>Order not success</p>-->

@@ -35,7 +35,6 @@ public class OrderController {
         orderRepo.save(order);
         sessionStatus.setComplete();
 
-        redirectAttributes.addAttribute("tacoOrderId", order.getId().toString());
         redirectAttributes.addFlashAttribute("tacoOrderId", order.getId().toString());
         return "redirect:/";
     }

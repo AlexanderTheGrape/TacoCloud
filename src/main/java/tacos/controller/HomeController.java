@@ -28,26 +28,12 @@ public class HomeController {
     define that template with Thymeleaf.
      */
     @GetMapping("/") // Handles requests for the root path /
-    public String home(HttpServletRequest request, RedirectAttributes redirectAttributes, Model model) {
+    public String home(HttpServletRequest request, Model model) {
         log.info("Received incoming request to home page from {}", request.getRemoteAddr());
         requestAnalyzerService.analyzeRequest(request);
 
-        try {
-            log.info("Redirect attributes: {}", redirectAttributes);
-            String tacoOrderId = model.asMap().get("tacoOrderId").toString();
-            log.info("tacoOrderId from model.asMap: {}", tacoOrderId);
-            model.addAttribute("tacoOrderId", tacoOrderId);
-        } catch (NullPointerException e) {
-            log.error(e.getMessage());
-        }
-        try {
-            Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request);
-            String tacoOrderIdFromFlashMap = (String) flashMap.get("tacoOrderId");
-            log.info("tacoOrderId from flashMap: {}", tacoOrderIdFromFlashMap);
-            model.addAttribute("tacoOrderId2", tacoOrderIdFromFlashMap);
-        } catch (NullPointerException e) {
-            log.error(e.getMessage());
-        }
+        // adds tacoOrderId = null to the model, if model.asMap().get(x) returns null
+        model.addAttribute("tacoOrderId", model.asMap().get("tacoOrderId"));
 
         return "home"; // Returns the (optional) view name, which in this case will in turn generate an html response
     }
