@@ -4,15 +4,19 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import tacos.model.ClientRequestsData;
 import tacos.service.RequestAnalyzerService;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 @Slf4j
-@Controller // The Controller
+@Controller
 public class HomeController {
 
     @Autowired
@@ -24,9 +28,27 @@ public class HomeController {
     define that template with Thymeleaf.
      */
     @GetMapping("/") // Handles requests for the root path /
-    public String home(HttpServletRequest request) {
+    public String home(HttpServletRequest request, RedirectAttributes redirectAttributes, Model model) {
         log.info("Received incoming request to home page from {}", request.getRemoteAddr());
         requestAnalyzerService.analyzeRequest(request);
+
+        try {
+            log.info("Redirect attributes: {}", redirectAttributes);
+            String tacoOrderId = model.asMap().get("tacoOrderId").toString();
+            log.info("tacoOrderId from model.asMap: {}", tacoOrderId);
+            model.addAttribute("tacoOrderId", tacoOrderId);
+        } catch (NullPointerException e) {
+            log.error(e.getMessage());
+        }
+        try {
+            Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request);
+            String tacoOrderIdFromFlashMap = (String) flashMap.get("tacoOrderId");
+            log.info("tacoOrderId from flashMap: {}", tacoOrderIdFromFlashMap);
+            model.addAttribute("tacoOrderId2", tacoOrderIdFromFlashMap);
+        } catch (NullPointerException e) {
+            log.error(e.getMessage());
+        }
+
         return "home"; // Returns the (optional) view name, which in this case will in turn generate an html response
     }
 
