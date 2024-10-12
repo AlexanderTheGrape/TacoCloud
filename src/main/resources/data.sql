@@ -1,3 +1,5 @@
+-- Will be loaded if using JPA
+
 delete from Ingredient_Ref;
 delete from Taco;
 delete from Taco_Order;
