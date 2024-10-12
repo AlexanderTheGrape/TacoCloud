@@ -1,6 +1,6 @@
 package tacos.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -11,11 +11,8 @@ import java.util.List;
 
 
 @Data
-@Entity
 public class Taco {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private Date createdAt = new Date();
@@ -28,7 +25,6 @@ public class Taco {
     @ManyToMany
     private List<Ingredient> ingredients = new ArrayList<>();
 
-    // TODO why is this addIngredient method unused, but the addTaco() in TacoOrder.java is used?
     public void addIngredient(Ingredient ingredient) {
         this.ingredients.add(ingredient);
     }
