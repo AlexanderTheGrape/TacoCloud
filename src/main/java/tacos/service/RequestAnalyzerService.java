@@ -29,7 +29,7 @@ public class RequestAnalyzerService {
 
     public void analyzeRequest(HttpServletRequest request) {
         RequestClientInfo requestClientInfo = new RequestClientInfo(request.getRemoteAddr(), request.getRemotePort(),
-                ZonedDateTime.of(LocalDateTime.now(), ZoneId.of("Australia/Sydney"))); // Can also use AET
+                ZonedDateTime.now()); // Can also use AET
         requestDataFileClient.updateClientRequestsData(requestClientInfo);
     }
 
