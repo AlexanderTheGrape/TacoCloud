@@ -1,4 +1,6 @@
+# Replaces application.properties
 spring:
   datasource:
     generate-unique-name: false
-    name: tacocloud
+    name: tacocloud # database url will be "jdbc:h2:mem:tacocloud"
+#    initialization-mode: always

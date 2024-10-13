@@ -1,14 +1,13 @@
 package tacos.controller;
 
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tacos.data.OrderRepository;
 import tacos.model.TacoOrder;
 
@@ -16,6 +15,7 @@ import tacos.model.TacoOrder;
 @Controller
 @RequestMapping("/orders")
 @SessionAttributes("tacoOrder")
+@AllArgsConstructor
 public class OrderController {
 
     private OrderRepository orderRepo;
@@ -26,11 +26,8 @@ public class OrderController {
     }
 
     @PostMapping
-    public String processOrder(
-            @Valid TacoOrder order,
-            Errors errors,
-            SessionStatus sessionStatus) {
-
+    public String processOrder(@Valid @ModelAttribute TacoOrder order, Errors errors, SessionStatus sessionStatus,
+                               RedirectAttributes redirectAttributes) {
         if (errors.hasErrors()) {
             return "orderForm";
         }
@@ -38,6 +35,7 @@ public class OrderController {
         orderRepo.save(order);
         sessionStatus.setComplete();
 
+        redirectAttributes.addFlashAttribute("tacoOrderId", order.getId().toString());
         return "redirect:/";
     }
 }
