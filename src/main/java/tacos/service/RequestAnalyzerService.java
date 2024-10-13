@@ -46,7 +46,6 @@ public class RequestAnalyzerService {
         sb.append("Information about the most recent request made to the Taco Cloud home page:\n");
         int requestsToSupply = Math.min(clientInfoList.size(), MAX_REQUESTS_TO_SUPPLY);
         for(int i = 0; i < requestsToSupply; i++) {
-            log.info("[listLastIPAddressAccesses] retrieving with i = {}, clientInfoList length: {}", i, clientInfoList.size());
             sb.append(clientInfoList.get(clientInfoList.size() - 1 - i));
         }
         return sb.toString();
@@ -68,7 +67,6 @@ public class RequestAnalyzerService {
         ArrayList<RequestClientInfo> newList = new ArrayList<>();
         int requestsToSupply = Math.min(clientInfoList.size(), MAX_REQUESTS_TO_SUPPLY);
         for(int i = 0; i < requestsToSupply; i++) {
-            log.info("[getFilteredReqeustsData] retrieving with i = {}, clientInfoList length: {}", i, clientInfoList.size());
             newList.add(clientInfoList.get(clientInfoList.size() - 1 - i));
         }
         return new ClientRequestsData(newList);
@@ -86,7 +84,6 @@ public class RequestAnalyzerService {
         ArrayList<String> newList = new ArrayList<>();
         int requestsToSupply = Math.min(clientInfoList.size(), MAX_REQUESTS_TO_SUPPLY);
         for(int i = 0; i < requestsToSupply; i++) {
-            log.info("[getFilteredClientRequestsDataAsStrings] retrieving with i = {}, clientInfoList length: {}", i, clientInfoList.size());
             newList.add(clientInfoList.get(clientInfoList.size() - 1 - i).toString());
         }
         return newList;
