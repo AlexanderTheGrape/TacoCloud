@@ -133,20 +133,25 @@ public class RequestDataFileClient extends AbstractFileClient{
     }
 
     public void updateClientRequestsData(RequestClientInfo singleRequestInfo) {
-        ClientRequestsData data = readObjectFromJsonFile(ClientRequestsData.class, requestJsonDataFilePath);
-        if (data == null) {
-            ArrayList<RequestClientInfo> requestsList = new ArrayList<>();
-            data = new ClientRequestsData(requestsList);
+        try {
+            ClientRequestsData data = readObjectFromJsonFile(ClientRequestsData.class, requestJsonDataFilePath);
+            if (data == null) {
+                ArrayList<RequestClientInfo> requestsList = new ArrayList<>();
+                data = new ClientRequestsData(requestsList);
+            }
+
+            ArrayList<RequestClientInfo> requestsList = data.getRequestClientInfoList();
+            if (requestsList.size() >= MAX_REQUEST_CLIENT_INFO_LIST_SIZE) {
+                requestsList.remove(0);
+            }
+            requestsList.add(singleRequestInfo);
+            data.setRequestClientInfoList(requestsList);
+
+            writeObjectToJsonFile(data, requestJsonDataFilePath);
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
 
-        ArrayList<RequestClientInfo> requestsList = data.getRequestClientInfoList();
-        if (requestsList.size() >= MAX_REQUEST_CLIENT_INFO_LIST_SIZE) {
-            requestsList.remove(0);
-        }
-        requestsList.add(singleRequestInfo);
-        data.setRequestClientInfoList(requestsList);
-
-        writeObjectToJsonFile(data, requestJsonDataFilePath);
     }
 
     public ClientRequestsData getClientRequestsData() {
