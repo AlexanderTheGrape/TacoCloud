@@ -35,6 +35,9 @@ public class RequestAnalyzerService {
 
     public String listLastIPAddressAccesses() {
         ClientRequestsData clientRequestsData = requestDataFileClient.getClientRequestsData();
+        if (clientRequestsData == null) {
+            return "";
+        }
         List<RequestClientInfo> clientInfoList = clientRequestsData.getRequestClientInfoList();
         StringBuilder sb = new StringBuilder();
         sb.append("Information about the most recent request made to the Taco Cloud home page:\n");
