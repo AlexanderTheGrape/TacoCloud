@@ -9,14 +9,20 @@
 
     <body>
         <div th:if="${tacoOrderId != null}" class="orderSuccessful">
-            <span th:text="'Order successful. Order ID: ' + ${tacoOrderId}">orderSuccess</span>
+            <video autoplay loop muted width="540" height="540" controls>
+                <source src="/images/taco cloud video 1.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
             <br><br>
-            <img th:src="@{/images/canvataco4small.png}"/>
+            <span th:text="'Order successful. Order ID: ' + ${tacoOrderId}">orderSuccess</span>
+
+<!--            <img th:src="@{/images/canvataco4small.png}"/>-->
         </div>
         <div th:unless="${tacoOrderId != null}">
             <h1>Welcome to......</h1>
             <img th:src="@{/images/canvaTaco2small.png}"/>
         </div>
+
         <h1>Taco Cloud</h1>
         <button onclick="location.href='/design'">Design your taco</button>
         <br>

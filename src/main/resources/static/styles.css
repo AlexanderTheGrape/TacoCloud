@@ -10,7 +10,7 @@
     size: 30px;
 }
 
-.orderSuccessful { color: red; }
+.orderSuccessful { color: green; }
 .userColor { color: green; }
 
 h1 {
