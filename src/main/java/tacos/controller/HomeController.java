@@ -7,13 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.support.RequestContextUtils;
 import tacos.model.ClientRequestsData;
 import tacos.service.RequestAnalyzerService;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 @Slf4j
 @Controller
@@ -30,7 +27,6 @@ public class HomeController {
     @GetMapping("/") // Handles requests for the root path /
     public String home(HttpServletRequest request, Model model) {
         log.info("Received incoming request to home page from {}", request.getRemoteAddr());
-        requestAnalyzerService.analyzeRequest(request);
 
         // adds tacoOrderId = null to the model, if model.asMap().get(x) returns null
         model.addAttribute("tacoOrderId", model.asMap().get("tacoOrderId"));
@@ -47,16 +43,20 @@ public class HomeController {
      * view can find them and use them to render a page in the user’s browser.
      * @param request provided automatically by Spring
      */
+    // Unused
     @ModelAttribute(name = "clientRequestInfoString")
     public String addClientInfoStringToModel(HttpServletRequest request) {
         return requestAnalyzerService.listLastIPAddressAccesses();
     }
 
     @ModelAttribute(name = "clientRequestsData")
-    public ClientRequestsData addClientInfoToModel(HttpServletRequest request) {
+    public ClientRequestsData addClientInfoToModel(HttpServletRequest request, Model model) {
+        requestAnalyzerService.analyzeRequest(request);
+        model.addAttribute("clientIP", request.getRemoteAddr());
         return requestAnalyzerService.getFilteredClientRequestsData();
     }
 
+    // Unused
     @ModelAttribute(name = "clientRequestsStrings")
     public ArrayList<String> addClientInfoStringsToModel(HttpServletRequest request) {
         return requestAnalyzerService.getFilteredClientRequestsDataAsStrings();

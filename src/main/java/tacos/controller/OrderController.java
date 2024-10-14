@@ -22,6 +22,7 @@ public class OrderController {
 
     @GetMapping("/current")
     public String orderForm() {
+        log.info("debug - /current mapping has been called. Returning orderForm page.");
         return "orderForm";
     }
 
@@ -29,6 +30,7 @@ public class OrderController {
     public String processOrder(@Valid @ModelAttribute TacoOrder order, Errors errors, SessionStatus sessionStatus,
                                RedirectAttributes redirectAttributes) {
         if (errors.hasErrors()) {
+            log.error("Error(s) in form validation: {}", errors.getAllErrors());
             return "orderForm";
         }
 

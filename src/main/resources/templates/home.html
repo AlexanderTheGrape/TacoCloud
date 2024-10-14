@@ -21,11 +21,12 @@
         <h1>Taco Cloud</h1>
         <button onclick="location.href='/design'">Design your taco</button>
         <br>
-        <h2> Site Visitors Data </h2>
+        <h3> Site Visitors Data </h3>
         <p>Most recent requests made to the Taco Cloud home page:</p>
         <div class="InfoDisplay" id="clientRequestInfoDisplay">
             <div th:each="clientRequestInfo : ${clientRequestsData.requestClientInfoList}">
-                <p th:text="${clientRequestInfo}">placeholder message</p>
+                <p th:if="${clientIP == clientRequestInfo.remoteIP}" class="userColor" th:text="${clientRequestInfo} + ' - This is you!'">placeholder message</p>
+                <p th:unless="${clientIP == clientRequestInfo.remoteIP}" th:text="${clientRequestInfo}">placeholder message</p>
             </div>
         </div>
     </body>
