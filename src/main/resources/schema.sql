@@ -1,4 +1,3 @@
-
 create table if not exists Taco_Order (
     id identity,
     delivery_Name varchar(50) not null,
