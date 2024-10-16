@@ -20,7 +20,7 @@ public record RequestClientInfo(String remoteIP, int remotePort, ZonedDateTime c
         StringBuilder sb = new StringBuilder();
         // ZonedDateTime is just an epoch (instant) value when serialized with Jacksonized. It needs to be provided with its time zone again.
         ZonedDateTime updatedZonedDateTime = currentZonedDateTime.withZoneSameInstant(zoneId);
-        sb.append(updatedZonedDateTime.format(amPmOfDayDateTimeFormatter)).append(" ").append(zoneId)
+        sb.append("(AET) ").append(updatedZonedDateTime.format(amPmOfDayDateTimeFormatter))
                 .append(" - from IP address ").append(remoteIP);
         return sb.toString();
     }
