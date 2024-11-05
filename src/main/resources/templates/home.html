@@ -27,6 +27,7 @@
         <button onclick="location.href='/design'">Design your taco</button>
         <br>
         <h3> Site Visitors Data </h3>
+        <p th:text="'Site visits today: ' + ${siteVisits}"></p>
         <p>Most recent requests made to the Taco Cloud home page:</p>
         <div class="InfoDisplay" id="clientRequestInfoDisplay">
             <div th:each="clientRequestInfo : ${clientRequestsData.requestClientInfoList}">
