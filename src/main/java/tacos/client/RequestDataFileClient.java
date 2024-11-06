@@ -28,8 +28,15 @@ public class RequestDataFileClient extends AbstractJsonFileClient {
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         initDirectoryForFiles(clientRequestDataDir);
-        initFiles(requestDataFile, requestObjectDataFile, clientDataJsonFile);
+        initFiles();
     }
+
+    protected void initFiles() {
+        requestDataFilePath = initFile(requestDataFile);
+        requestObjectDataFilePath = initFile(requestObjectDataFile);
+        requestJsonDataFilePath = initFile(clientDataJsonFile);
+    }
+
 
     public void writeLineToFile(String s) {
         try {

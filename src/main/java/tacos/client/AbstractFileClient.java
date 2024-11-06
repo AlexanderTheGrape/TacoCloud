@@ -12,6 +12,23 @@ public abstract class AbstractFileClient {
     protected FileSystem fileSystem;
     protected Path fileDirectory;
 
+    protected abstract void initFiles();
+
+    protected Path initFile(String pathString) {
+        Path path = fileDirectory.resolve(pathString);
+        if (!Files.exists(path)) {
+            try {
+                Files.createFile(path);
+                log.debug("File created: {}", path);
+            } catch (IOException e) {
+                log.error("Could not create file", e);
+            }
+        } else {
+            log.debug("File exists. It is located at: {}", path.toAbsolutePath());
+        }
+        return path;
+    }
+
     protected void initDirectoryForFiles(String dataDir) {
         fileSystem = java.nio.file.FileSystems.getDefault();
 
@@ -39,22 +56,5 @@ public abstract class AbstractFileClient {
             log.error("Could not create dataDirPath for client request info", e);
         }
         this.fileDirectory = dataDirPath;
-    }
-
-    protected void initFiles (String... pathStrings) {
-        for(String pathString : pathStrings) {
-            // check if file exists. if not, create new
-            Path path = fileDirectory.resolve(pathString);
-            if (!Files.exists(path)) {
-                try {
-                    Files.createFile(path);
-                    log.debug("File created: {}", path);
-                } catch (IOException e) {
-                    log.error("Could not create file", e);
-                }
-            } else {
-                log.debug("File exists. It is located at: {}", path.toAbsolutePath());
-            }
-        }
     }
 }
