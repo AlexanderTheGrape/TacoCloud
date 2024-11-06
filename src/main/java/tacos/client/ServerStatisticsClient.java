@@ -2,12 +2,11 @@ package tacos.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import tacos.model.ClientRequestsData;
-import tacos.model.RequestClientInfo;
+import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 
+@Component
 public class ServerStatisticsClient extends AbstractJsonFileClient {
     private final String serverStatsDataDir = "Tacocloud/Data/ServerStats";
     private final String serverStatsDataJsonFile = "ServerStatsData.json";
@@ -23,8 +22,4 @@ public class ServerStatisticsClient extends AbstractJsonFileClient {
     protected void initFiles() {
         serverStatsPath = initFile(serverStatsDataJsonFile);
     }
-
-//    public ClientRequestsData getClientRequestsData() {
-//        return readObjectFromJsonFile(ClientRequestsData.class, requestJsonDataFilePath);
-//    }
 }
