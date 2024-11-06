@@ -9,15 +9,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import tacos.model.ClientRequestsData;
 import tacos.service.RequestAnalyzerService;
+import tacos.service.ServerStatsService;
 
 import java.util.ArrayList;
 
 @Slf4j
 @Controller
 public class HomeController {
-
-    @Autowired
+    @Autowired // TODO replace explicit autowiring
     RequestAnalyzerService requestAnalyzerService;
+    @Autowired
+    ServerStatsService serverStatsService;
 
     /**
     This / value is interpreted as the logical name of a view. How that view is implemented
@@ -30,6 +32,8 @@ public class HomeController {
 
         // adds tacoOrderId = null to the model, if model.asMap().get(x) returns null
         model.addAttribute("tacoOrderId", model.asMap().get("tacoOrderId"));
+
+        model.addAttribute("siteVisits", serverStatsService.incrementVisitsCount());
 
         return "home"; // Returns the (optional) view name, which in this case will in turn generate an html response
     }
