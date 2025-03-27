@@ -38,7 +38,7 @@ public class JdbcOrderRepository implements OrderRepository {
 
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcOperations.update(preparedStatementCreator, keyHolder);
-        long orderId = keyHolder.getKey().longValue();
+        long orderId = (long)keyHolder.getKeys().get("id");
         order.setId(orderId);
 
         List<Taco> tacos = order.getTacos();
@@ -78,7 +78,7 @@ public class JdbcOrderRepository implements OrderRepository {
 
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcOperations.update(preparedStatementCreator, keyHolder);
-        long tacoId = keyHolder.getKey().longValue();
+        long tacoId = (long)keyHolder.getKeys().get("id");
         taco.setId(tacoId);
 
         saveIngredientRefs(tacoId, taco.getIngredients());
@@ -87,7 +87,6 @@ public class JdbcOrderRepository implements OrderRepository {
     }
 
     private void saveIngredientRefs(long tacoId, List<Ingredient> ingredients) {
-        // TODO find out if id is what is meant to be used for 'ingredient' of Ingredient_Ref
         int key = 0;
         for (Ingredient ingredient : ingredients) {
             jdbcOperations.update(
